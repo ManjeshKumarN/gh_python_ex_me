@@ -7,7 +7,7 @@ jobs:
       - name: Get_code
         uses: actions/checkout@v3
       - name: install dependencies
-        run: pip install -r requirements
+        run: pip install -r requirements.txt
       - name: run the code 
         run: python iris_classification.py
 
