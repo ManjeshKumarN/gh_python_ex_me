@@ -9,7 +9,7 @@ jobs:
       - name: get python 3.8
         uses: actions/setup-python@v4
         with:
-            python-version: '3.9'
+            python-version: '3.9' # this will set up python 3,.9 as default 
             cache: 'pip' # caching pip dependencies: 
       - name: install dependencies
         run: |
@@ -17,4 +17,19 @@ jobs:
           python --version
       - name: run the code 
         run: python iris_classification.py
-
+  build_docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get_code
+        uses: actions/checkout@v3
+      - name: get python 3.8
+        uses: actions/setup-python@v4
+        with:
+            python-version: '3.9' # this will set up python 3,.9 as default 
+            cache: 'pip' # caching pip dependencies: 
+      - name: install dependencies
+        run: |
+          pip install -r requirements.txt
+          python --version 
+      - name: build docker iamge
+        run: echo "build docker image" 
