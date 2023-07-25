@@ -6,8 +6,15 @@ jobs:
     steps:
       - name: Get_code
         uses: actions/checkout@v3
+      - name: get python 3.8
+        uses: actions/setup-python@v4
+        with:
+            python-version: '3.9'
+            cache: 'pip' # caching pip dependencies: 
       - name: install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          python --version
       - name: run the code 
         run: python iris_classification.py
 
