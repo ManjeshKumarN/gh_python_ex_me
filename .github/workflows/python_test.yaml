@@ -18,8 +18,9 @@ jobs:
       - name: run the code 
         run: python iris_classification.py
   build_docker:
-    runs-on: ubuntu-latest
-    steps:
+    needs: python_code_test  # will run only after successful completion of python_code_test job
+    runs-on:  ubuntu-latest  # every job has its own runner and there are isolated from each other
+    steps:                   # jobs will run in parallel by default
       - name: Get_code
         uses: actions/checkout@v3
       - name: get python 3.8
