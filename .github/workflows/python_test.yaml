@@ -1,5 +1,5 @@
 name: python-test
-on: push
+on: [push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- manual trigger
 jobs:
   python_code_test:
     runs-on: ubuntu-latest
