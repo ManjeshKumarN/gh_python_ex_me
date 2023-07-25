@@ -1,0 +1,10 @@
+name: expressions_test_1
+on: workflow_dispatch
+jobs:
+  express_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get all github contents into ubuntu-latest
+        uses: actions/checkout@v3
+      - name: github expression         # expressions are used to get the data from varibales or parameters
+        run: echo "${{toJSON(github)}}" # toJSON , is a github provided one , github gives is a keyword, gives teh github metadata
