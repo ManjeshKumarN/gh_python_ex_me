@@ -35,13 +35,13 @@ jobs:
       - name: run the code 
         run: python iris_classification.py
       - name: Get name of the experiment folder name 
-        run: find  mlruns/ 
-      - name: get files and folder
         id: pkl_file_name # id for step to use in contexts
+        run: find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' # finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable  
+      - name: get files and folder
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' # finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable 
+          path: mlruns
   build_docker:
     needs: python_code_test  # will run only after successful completion of python_code_test job
     runs-on:  ubuntu-latest  # every job has its own runner and there are isolated from each other
