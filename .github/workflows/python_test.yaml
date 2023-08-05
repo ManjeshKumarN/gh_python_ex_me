@@ -18,16 +18,20 @@ on: #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- m
 jobs:
   python_code_test:
     runs-on: ubuntu-latest
-    outputs: 
+    outputs:  
       model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 
+      # contexts : https://docs.github.com/en/actions/learn-github-actions/contexts
+      # can specify more than on output of steps
     steps:
       - name: Get_code
         uses: actions/checkout@v3 
       - name: get python 3.8
         uses: actions/setup-python@v4
         with:
-            python-version: '3.9' # this will set up python 3,.9 as default 
-            cache: 'pip' # caching pip dependencies: 
+            python-version: '3.9' # this will set up python 3.9,3.10.., as default 
+            cache: 'pip' # caching pip dependencies is built in actions/setup-python@v4 
+            #cache dependency : https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
+            key: requirements-${{hashFiles('**/requirements.txt')}} 
       - name: install dependencies
         run: |
           pip install -r requirements.txt
@@ -35,15 +39,16 @@ jobs:
       - name: run the code 
         run: python iris_classification.py
       - name: Get name of the experiment folder name 
-        id: pkl_file_name # id for step to use in contexts
+        id: pkl_file_name                        # id for step to use in contexts, should be used after step of creation of the files that is finding
         run: find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' # finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable  
       - name: get files and folder
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3 # action to upload the folder into github
         with:
-          name: my-artifact
-          path: mlruns
+          name: my-artifact # name of the artifact to upload which will be used for download as well
+          path: mlruns  # path of the file or folder to upload
+          # artifacts : https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
   build_docker:
-    needs: python_code_test  # will run only after successful completion of python_code_test job
+    needs: python_code_test  # will run only after successful completion of python_code_test job , should used as start of the job 
     runs-on:  ubuntu-latest  # every job has its own runner and there are isolated from each other
     steps:                   # jobs will run in parallel by default
       - name: Get_code
@@ -52,7 +57,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
             python-version: '3.9' # this will set up python 3,.9 as default 
-            cache: 'pip' # caching pip dependencies: 
+            cache: 'pip' # caching pip dependencies:
+            key: requirements-${{hashFiles('**/requirements.txt')}} 
       - name: install dependencies
         run: |
           pip install -r requirements.txt
@@ -63,7 +69,7 @@ jobs:
         uses: actions/download-artifact@v3 # to download the artifact created from github runner , it will unzip the contents in the zip folder and place it in same path where runner is executing 
         with : 
           name: my-artifact # name of the artifact created ,and it has to be a sequential job
-      - name : get contents
+      - name : get contents # t osee the contents of the artifacts folder alnong with other files
         run: ls 
       - name : get the output of the previous step
         run: echo "${{needs.python_code_test.outputs.model_pkl_file}}" # needs ,the dependency job which holds all the outputs of the dependency job 
