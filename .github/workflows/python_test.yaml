@@ -32,7 +32,7 @@ jobs:
             cache: 'pip' # caching pip dependencies is built in actions/setup-python@v4 
             #cache dependency : https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
       - name: cache dependecies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: requirments-${{ hashFiles('**/requirements.txt') }}
@@ -63,7 +63,7 @@ jobs:
             python-version: '3.9' # this will set up python 3,.9 as default 
             cache: 'pip' # caching pip dependencies
       - name: cache dependecies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
             path: ~/.cache/pip
             key: requirments-${{ hashFiles('**/requirements.txt') }}
