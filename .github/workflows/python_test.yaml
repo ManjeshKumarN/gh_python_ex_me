@@ -1,10 +1,20 @@
 name: python-test
 on: #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- manual trigger
+
+# Using multiple events
+# If you specify multiple events, only one of those events needs to occur to trigger your workflow. 
+# If multiple triggering events for your workflow occur at the same time, multiple workflow runs will be triggered.
   pull_request: 
     types: closed
   push:
     branches:
-      - main
+      - main  
+      - 'mona/octocat'
+      - 'releases/**'
+          # Sequence of patterns matched against refs/tags
+    tags:        
+      - v2
+      - v1.*
 jobs:
   python_code_test:
     runs-on: ubuntu-latest
