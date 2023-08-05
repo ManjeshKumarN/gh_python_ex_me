@@ -54,3 +54,10 @@ jobs:
           python --version 
       - name: build docker iamge
         run: echo "build docker image" 
+      - name: download the artifact from github runner
+        uses: actions/download-artifact@v3 # to download the artifact created from github runner 
+        with : 
+          name: my-artifact # name of the artifact created ,and it has to be a sequential job
+      - name : get contents
+        run: ls 
+          
