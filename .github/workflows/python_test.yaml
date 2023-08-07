@@ -15,27 +15,37 @@ on: #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- m
     tags:        
       - v2
       - v1.*
+env:
+  env_var1: we # environment varibales can be at workflow level 
+  env_var2: jhg # can be of any name 
+  env_var3: 123
 jobs:
   python_code_test:
+    env:
+      ENV_VAR1: 234 # environment varibales can be at job level
+      ENV_VAR2: jfh
+      ENV_VAR3: uty
     runs-on: ubuntu-latest
     outputs:  
       model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 
       # contexts : https://docs.github.com/en/actions/learn-github-actions/contexts
       # can specify more than on output of steps
     steps:
-      - name: Get_code
+      - name: Get_code 
         uses: actions/checkout@v3 
       - name: get python 3.8
+        env:
+          var1: 234  # env variables at steps level
         uses: actions/setup-python@v4
         with:
             python-version: '3.9' # this will set up python 3.9,3.10.., as default 
             #cache: 'pip' # caching pip dependencies is built in actions/setup-python@v4 
             #cache dependency : https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
-      - name: cache dependecies
-        uses: actions/cache@v3
+      - name: cache dependecies # cache has to be used before the step which needs to be cached 
+        uses: actions/cache@v3 # when once the cache is stored it will reused
         with:
           path: ~/.cache/pip
-          key: requirments-${{ hashFiles('**/requirements.txt') }}
+          key: requirments-${{ hashFiles('**/requirements.txt') }}  # this creats a unique key for cache 
       - name: install dependencies
         run: |
           pip install -r requirements.txt
@@ -44,13 +54,17 @@ jobs:
         run: python iris_classification.py
       - name: Get name of the experiment folder name 
         id: pkl_file_name                        # id for step to use in contexts, should be used after step of creation of the files that is finding
-        run: find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' # finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable  
+        run: |
+          find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' # finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable  
+          echo ${{env.ENV_VAR1}} # accessing env variables in workflows
+          echo $ENV_VAR2
       - name: get files and folder
         uses: actions/upload-artifact@v3 # action to upload the folder into github
         with:
           name: my-artifact # name of the artifact to upload which will be used for download as well
           path: mlruns  # path of the file or folder to upload
           # artifacts : https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+        
   build_docker:
     needs: python_code_test  # will run only after successful completion of python_code_test job , should used as start of the job 
     runs-on:  ubuntu-latest  # every job has its own runner and there are isolated from each other
@@ -71,6 +85,7 @@ jobs:
         run: |
           pip install -r requirements.txt
           python --version 
+          echo $ENV_VAR2
       - name: build docker iamge
         run: echo "build docker image" 
       - name: download the artifact from github runner
