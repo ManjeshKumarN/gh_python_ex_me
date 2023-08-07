@@ -23,8 +23,8 @@ jobs:
   python_code_test:
     env:
       ENV_VAR1: 234 # environment varibales can be at job level
-      ENV_VAR2: jfh
-      ENV_VAR3: uty
+      ENV_VAR2: ${{secrets.ENV_VAR2}} # accessing the environment variables using secrets
+      ENV_VAR3: ${{secrets.ENV_VAR3}}
     runs-on: ubuntu-latest
     outputs:  
       model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 
@@ -56,8 +56,9 @@ jobs:
         id: pkl_file_name                        # id for step to use in contexts, should be used after step of creation of the files that is finding
         run: |
           find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' # finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable  
-          echo ${{env.ENV_VAR1}} # accessing env variables in workflows
+          echo ${{env.ENV_VAR1}}   
           echo $ENV_VAR2
+        # accessing environment variables using env context in workflows
       - name: get files and folder
         uses: actions/upload-artifact@v3 # action to upload the folder into github
         with:
@@ -85,7 +86,9 @@ jobs:
         run: |
           pip install -r requirements.txt
           python --version 
-          echo $ENV_VAR2
+          echo $ENV_VAR2 
+       # accessing the env variables
+       # environment variables defined are at job level so it will not appear in second job , will not give error
       - name: build docker iamge
         run: echo "build docker image" 
       - name: download the artifact from github runner
