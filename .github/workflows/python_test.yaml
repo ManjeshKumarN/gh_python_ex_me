@@ -21,15 +21,17 @@ env:
   env_var3: 123
 jobs:
   python_code_test:
-    env:
-      ENV_VAR1: 234 # environment varibales can be at job level
-      ENV_VAR2: ${{secrets.ENV_VAR2}} # accessing the environment variables using secrets
-      ENV_VAR3: ${{secrets.ENV_VAR3}}
-    runs-on: ubuntu-latest
+    environment: production
     outputs:  
       model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 
       # contexts : https://docs.github.com/en/actions/learn-github-actions/contexts
       # can specify more than on output of steps
+    env:
+      ENV_VAR1: 234 # environment varibales can be at job level
+      ENV_VAR2: ${{secrets.ENV_VAR2}} # accessing the environment variables using secrets
+      ENV_VAR3: ${{secrets.ENV_VAR3}}
+      
+    runs-on: ubuntu-latest
     steps:
       - name: Get_code 
         uses: actions/checkout@v3 
