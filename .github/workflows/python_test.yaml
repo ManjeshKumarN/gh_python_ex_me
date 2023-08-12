@@ -43,6 +43,10 @@ jobs:
             python-version: '3.9' # this will set up python 3.9,3.10.., as default 
             #cache: 'pip' # caching$pip dependencies is built in actions/setup-python@v4 
             #cache dependency : https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
+      - name: environment varibales in steps
+        run: echo ${{env.var11}}
+        env:
+          var11: erf
       - name: cache dependecies # cache has to be used before the step which needs to be cached 
         uses: actions/cache@v3 # when once the cache is stored it will reused
         with:
