@@ -38,7 +38,7 @@ dataset: PandasDataset = mlflow.data.from_pandas(X_train_sd)
 # Modelling
 mlflow.set_experiment("mlflow-experiment-python-test")
 with mlflow.start_run():
-    svc_=SC(random_state=99,probability=True,decision_function_shape='ovr')
+    svc_=SVC(random_state=99,probability=True,decision_function_shape='ovr')
     kernel = ['linear', 'poly', 'rbf']
     tolerance = [1e-3, 1e-4, 1e-5, 1e-6]
     C = [1, 1.5, 2, 2.5, 3]
