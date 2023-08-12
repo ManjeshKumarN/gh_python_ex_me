@@ -57,9 +57,9 @@ jobs:
       - name: Get name of the experiment folder name 
         id: pkl_file_name                        # id for step to use in contexts, should be used after step of creation of the files that is finding
         run: |
-          find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' # finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable  
-          echo ${{env.ENV_VAR1}}   
-          echo $ENV_VAR2
+          find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' #finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable  
+          echo ${{env.ENV_VAR1}}   # can call envrionment variables in two ways
+          echo $ENV_VAR2 # can call envrionment variables in two ways 
         # accessing environment variables using env context in workflows
       - name: get files and folder
         uses: actions/upload-artifact@v3 # action to upload the folder into github
