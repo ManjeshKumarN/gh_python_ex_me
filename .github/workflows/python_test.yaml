@@ -52,7 +52,7 @@ jobs:
         run: |
           pip install -r requirements.txt
           python --version
-          echo " this is env var $ENV_VAR3 "
+          echo " this is env var ${{vars.ENV_VAR3}}"
       - name: run the code 
         id: code_execution
         run: python iris_classification.py
@@ -100,6 +100,7 @@ jobs:
           pip install -r requirements.txt
           python --version 
           echo $ENV_VAR2 
+          echo $env_var2
        # accessing the env variables
        # environment variables defined are at job level so it will not appear in second job , will not give error
       - name: build docker iamge
