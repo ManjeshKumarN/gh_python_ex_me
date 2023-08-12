@@ -56,11 +56,16 @@ jobs:
         id: code_execution
         run: python iris_classification.py
       - name: code failed status
-        if: steps.code_execution.outcome== 'failure'
+        if: failure() && steps.code_execution.outcome== 'failure' #just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions
+        # failure(),success(),always(),cancelled()
+        # failure() returns true when any previous step or job fails
+        # success() returns true when none of previous steps failed 
+        # always() causes the step to always execute even when cancelled 
+        # cancelled()  return true if the workflow has been cancelled 
         run : echo "iris_classification.py script execution failed"
       - name: Get name of the experiment folder name 
         id: pkl_file_name                        # id for step to use in contexts, should be used after step of creation of the files that is finding
-        run: |
+        run: | 
           find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' #finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable  
           echo ${{env.ENV_VAR1}}   # can call envrionment variables in two ways
           echo $ENV_VAR2 # can call envrionment variables in two ways 
