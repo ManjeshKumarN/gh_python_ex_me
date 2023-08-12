@@ -21,7 +21,7 @@ env:
   env_var3: 123
 jobs:
   python_code_test:
-    environment: production
+    environment: production 
     outputs:  
       model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 
       # contexts : https://docs.github.com/en/actions/learn-github-actions/contexts
@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
             python-version: '3.9' # this will set up python 3.9,3.10.., as default 
-            #cache: 'pip' # caching pip dependencies is built in actions/setup-python@v4 
+            #cache: 'pip' # caching$pip dependencies is built in actions/setup-python@v4 
             #cache dependency : https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
       - name: cache dependecies # cache has to be used before the step which needs to be cached 
         uses: actions/cache@v3 # when once the cache is stored it will reused
@@ -52,6 +52,7 @@ jobs:
         run: |
           pip install -r requirements.txt
           python --version
+          echo " this is env var $ENV_VAR3 "
       - name: run the code 
         id: code_execution
         run: python iris_classification.py
