@@ -121,6 +121,7 @@ jobs:
         run: echo "${{needs.python_code_test.outputs.model_pkl_file}}" # needs ,the dependency job which holds all the outputs of the dependency job 
   
   deploy:
+    needs: [python_code_test,build_docker] # to provide more than one dependencies
     if: failure()  # this will return if any previous job fails, to run only if any previous job fails 
     runs-on: ubuntu-latest
     steps:
