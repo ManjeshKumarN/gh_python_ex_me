@@ -61,12 +61,14 @@ jobs:
         id: code_execution
         run: python iris_classification.py
       - name: code failed status
-        if: failure() && steps.code_execution.outcome== 'failure' #just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions
-        # when the previous step fails only this step will execute and others wll not execute as they are not provided with if conditions
-        # failure(),success(),always(),cancelled()
+        # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
+        if: failure() && steps.code_execution.outcome== 'failure' # just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions
+        # when the previous step fails only this step will execute and other steps will not execute as they are not provided with if conditions
+        # when the previous step didnot fail then this if condition step will not execute 
+        # special functions can be used in if failure(),success(),always(),cancelled() 
         # failure() returns true when any previous step or job fails
         # success() returns true when none of previous steps failed 
-        # always() causes the step to always execute even when cancelled 
+        # always() returns true always , causes the step to always execute even when cancelled 
         # cancelled()  return true if the workflow has been cancelled 
         run : echo "iris_classification.py script execution failed"
       - name: Get name of the experiment folder name 
@@ -85,7 +87,7 @@ jobs:
         
   build_docker:
     needs: python_code_test  # will run only after successful completion of python_code_test job , should used as start of the job 
-    runs-on:  ubuntu-latest  # every job has its own runner and there are isolated from each other
+    runs-on:  ubuntu-latest  # every job has its own runner and there are isolated from each other and need to copy the code for each runner 
     steps:                   # jobs will run in parallel by default
       - name: Get_code
         uses: actions/checkout@v3
@@ -115,6 +117,16 @@ jobs:
           name: my-artifact # name of the artifact created ,and it has to be a sequential job
       - name : get contents # t osee the contents of the artifacts folder alnong with other files
         run: ls 
-      - name : get the output of the previous step
+      - name : get the output of the previous job
         run: echo "${{needs.python_code_test.outputs.model_pkl_file}}" # needs ,the dependency job which holds all the outputs of the dependency job 
-          
+  
+  deploy:
+    if: failure()  # this will return if any previous job fails, to run only if any previous job fails 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: deploy the functions
+        run: |
+          echo "This application is deployed"
+
