@@ -68,6 +68,8 @@ jobs:
         run: |
             ls
             pwd
+            cd venv
+            ls
             source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv/bin/activate
             python iris_classification.py
       - name: code failed status

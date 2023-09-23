@@ -22,11 +22,11 @@ jobs:
           virtualenv venv1
           ls
           pwd
-          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv1/Scripts/activate
+          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv1/bin/activate
           pip install -r requirements.txt
       - name : activating environment
         run:
-          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv1/Scripts/activate
+          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv1/bin/activate
           python iris_classification.py
       - name: echo outputs 
         run: echo "it is working"
