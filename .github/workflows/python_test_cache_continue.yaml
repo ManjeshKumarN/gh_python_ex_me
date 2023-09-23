@@ -68,14 +68,15 @@ jobs:
           pip install -r requirements.txt
           python --version
           echo "this is env var ${{vars.ENV_VAR3}}"
-      - name: run the code 
+      - name: run the code
+        continue-on-error: true   
         id: code_execution
         run: |
             source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate
             python iris_classification.py
       - name: code failed status
         # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
-        continue-on-error: true  # just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions
+        #if: failure() && steps.code_execution.outcome== 'failure'  # just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions
         # when the previous step fails only this step will execute and other steps will not execute as they are not provided with if conditions
         # when the previous step didnot fail then this if condition step will not execute 
         # special functions can be used in if failure(),success(),always(),cancelled() 
