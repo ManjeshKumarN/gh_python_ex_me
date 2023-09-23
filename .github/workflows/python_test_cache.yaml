@@ -65,7 +65,7 @@ jobs:
         run: |
             ls
             pwd
-            source ./venv/Scripts/activate
+            source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv/Scripts/activate
             python iris_classification.py
       - name: code failed status
         # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
