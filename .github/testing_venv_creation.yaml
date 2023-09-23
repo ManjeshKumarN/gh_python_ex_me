@@ -1,0 +1,25 @@
+name: testing_venv_install
+on:
+   push:
+    main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: get code
+        uses: actions/checkout@v3 
+      - name: caching
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: venv1
+          key: requirments-${{ hashFiles('**/requirements.txt') }}
+      - name: install dependencies
+        if: steps.cache.outputs.cache-hit!='true' 
+        runs: |
+          pip install -r requirements.txt
+          python3.8 -m venv ./venv1
+          source ./venv/Scripts/activate
+      - name: echo outputs 
+        runs: echo "it is working"
+        
