@@ -1,20 +1,20 @@
 name: python-test
-on: #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- manual trigger
+on: workflow_dispatch #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- manual trigger
 
 # Using multiple events
 # If you specify multiple events, only one of those events needs to occur to trigger your workflow. 
 # If multiple triggering events for your workflow occur at the same time, multiple workflow runs will be triggered.
-  pull_request: 
-    types: closed
-  push:
-    branches:
-      - main  
-      - 'mona/octocat'
-      - 'releases/**'
-          # Sequence of patterns matched against refs/tags
-    tags:        
-      - v2
-      - v1.*
+  # pull_request: 
+  #   types: closed
+  # push:
+  #   branches:
+  #     - main  
+  #     - 'mona/octocat'
+  #     - 'releases/**'
+  #         # Sequence of patterns matched against refs/tags
+  #   tags:        
+  #     - v2
+  #     - v1.*
 env:
   env_var1: we # environment varibales can be at workflow level 
   env_var2: jhg # can be of any name 
@@ -123,6 +123,7 @@ jobs:
   deploy:
     needs: [python_code_test,build_docker] # to provide more than one dependencies
     if: failure()  # this will return if any previous job fails, to run only if any previous job fails 
+    # can even use and , with other conditions 
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
