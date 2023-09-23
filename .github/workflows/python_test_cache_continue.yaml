@@ -1,4 +1,4 @@
-name: python-test
+name: python-test-continue
 on: #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- manual trigger
 
 # Using multiple events
