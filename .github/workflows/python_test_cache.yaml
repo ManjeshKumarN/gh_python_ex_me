@@ -51,26 +51,22 @@ jobs:
         id: cache_
         uses: actions/cache@v3 # when once the cache is stored it will reused
         with:
-          path: venv
+          path: venv2
           key: requirments-${{ hashFiles('**/requirements.txt') }}  # this creats a unique key for cache 
       - name: install dependencies
         if: steps.cache_.outputs.cache-hit !='true'       # this will install dependecies when the cache is not saved    #cache-hit is a output of the cache functionality , cache-hit=='true' means cache is successful else not successful
         # steps context will get the string output
         run: |
           pip install virtualenv
-          virtualenv venv 
-          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv/bin/activate 
+          virtualenv venv2
+          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate 
           pip install -r requirements.txt
           python --version
           echo "this is env var ${{vars.ENV_VAR3}}"
       - name: run the code 
         id: code_execution
         run: |
-            ls
-            pwd
-            cd venv
-            ls
-            source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv/bin/activate
+            source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate
             python iris_classification.py
       - name: code failed status
         # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
@@ -112,7 +108,7 @@ jobs:
         id: cache_1
         uses: actions/cache@v3
         with:
-            path: venv
+            path: venv2
             key: requirments-${{ hashFiles('**/requirements.txt') }}
       - name: install dependencies
         if: steps.cache_1.outputs.cache-hit!='true'
