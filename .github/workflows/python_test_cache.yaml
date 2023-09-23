@@ -47,6 +47,11 @@ jobs:
         run: echo ${{env.var11}}
         env:
           var11: erf
+      - name: cache external folder
+        uses: actions/cache@v3 # when once the cache is stored it will reused
+        with:
+            path: venv
+            key: venv-${{ hashFiles('**/test.ipynb') }}
       - name: cache dependecies # cache has to be used before the step which needs to be cached 
         id: cache_
         uses: actions/cache@v3 # when once the cache is stored it will reused
