@@ -63,6 +63,8 @@ jobs:
       - name: run the code 
         id: code_execution
         run: |
+            ls
+            pwd
             source ./venv/Scripts/activate
             python iris_classification.py
       - name: code failed status

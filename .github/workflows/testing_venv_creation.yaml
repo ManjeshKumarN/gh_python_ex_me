@@ -18,8 +18,10 @@ jobs:
       - name: install dependencies
         if: steps.cache.outputs.cache-hit!='true' 
         run: |
+          pip install virtualenv
+          python -m venv ./venv1
+          source ./venv1/Scripts/activate
           pip install -r requirements.txt
-          python3.8 -m venv ./venv1
       - name : activating environment
         run:
           source ./venv1/Scripts/activate
