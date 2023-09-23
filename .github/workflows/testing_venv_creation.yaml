@@ -19,14 +19,14 @@ jobs:
         if: steps.cache.outputs.cache-hit!='true' 
         run: |
           pip install virtualenv
-          python -m venv ./venv1
+          virtualenv venv1
           ls
           pwd
-          source ./venv1/Scripts/activate
+          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv1/Scripts/activate
           pip install -r requirements.txt
       - name : activating environment
         run:
-          source ./venv1/Scripts/activate
+          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv1/Scripts/activate
           python iris_classification.py
       - name: echo outputs 
         run: echo "it is working"
