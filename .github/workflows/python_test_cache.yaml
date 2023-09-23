@@ -62,7 +62,9 @@ jobs:
           echo "this is env var ${{vars.ENV_VAR3}}"
       - name: run the code 
         id: code_execution
-        run: python iris_classification.py
+        run: |
+            source ./venv/Scripts/activate
+            python iris_classification.py
       - name: code failed status
         # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
         if: failure() && steps.code_execution.outcome== 'failure' # just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions

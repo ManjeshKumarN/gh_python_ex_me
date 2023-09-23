@@ -1,7 +1,8 @@
 name: testing_venv_install
 on:
    push:
-    main
+    branches:
+     - main
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -16,10 +17,13 @@ jobs:
           key: requirments-${{ hashFiles('**/requirements.txt') }}
       - name: install dependencies
         if: steps.cache.outputs.cache-hit!='true' 
-        runs: |
+        run: |
           pip install -r requirements.txt
           python3.8 -m venv ./venv1
-          source ./venv/Scripts/activate
+      - name : activating environment
+        run:
+          source ./venv1/Scripts/activate
+          python iris_classification.py
       - name: echo outputs 
-        runs: echo "it is working"
+        run: echo "it is working"
         
