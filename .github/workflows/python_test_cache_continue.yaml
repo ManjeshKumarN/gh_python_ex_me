@@ -1,0 +1,149 @@
+name: python-test
+on: #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- manual trigger
+
+# Using multiple events
+# If you specify multiple events, only one of those events needs to occur to trigger your workflow. 
+# If multiple triggering events for your workflow occur at the same time, multiple workflow runs will be triggered.
+  pull_request: 
+    types: closed
+  push:
+    branches:
+      - main  
+      - 'mona/octocat'
+      - 'releases/**'
+          # Sequence of patterns matched against refs/tags
+    tags:        
+      - v2
+      - v1.*
+env:
+  env_var1: we # environment varibales can be at workflow level 
+  env_var2: jhg # can be of any name 
+  env_var3: 123
+jobs:
+  python_code_test:
+    environment: production 
+    outputs:  
+      model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 
+      # contexts : https://docs.github.com/en/actions/learn-github-actions/contexts
+      # can specify more than on output of steps
+    env:
+      ENV_VAR1: 234 # environment varibales can be at job level
+      ENV_VAR2: ${{secrets.ENV_VAR2}} # accessing the environment variables using secrets
+      ENV_VAR3: ${{secrets.ENV_VAR3}}
+      
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get_code 
+        uses: actions/checkout@v3 
+      - name: get python 3.8
+        env:
+          var1: 234  # env variables at steps level
+        uses: actions/setup-python@v4
+        with:
+            python-version: '3.9' # this will set up python 3.9,3.10.., as default 
+            #cache: 'pip' # caching$pip dependencies is built in actions/setup-python@v4 
+            #cache dependency : https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
+      - name: environment varibales in steps
+        run: echo ${{env.var11}}
+        env:
+          var11: erf
+      - name: cache external folder
+        uses: actions/cache@v3 # when once the cache is stored it will reused
+        with:
+            path: venv
+            key: venv-${{ hashFiles('**/test.ipynb') }}
+      - name: cache dependecies # cache has to be used before the step which needs to be cached 
+        id: cache_
+        uses: actions/cache@v3 # when once the cache is stored it will reused
+        with:
+          path: venv2
+          key: requirments-${{ hashFiles('**/requirements.txt') }}  # this creats a unique key for cache 
+      - name: install dependencies
+        if: steps.cache_.outputs.cache-hit !='true'       # this will install dependecies when the cache is not saved    #cache-hit is a output of the cache functionality , cache-hit=='true' means cache is successful else not successful
+        # steps context will get the string output
+        run: |
+          pip install virtualenv
+          virtualenv venv2
+          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate 
+          pip install -r requirements.txt
+          python --version
+          echo "this is env var ${{vars.ENV_VAR3}}"
+      - name: run the code 
+        id: code_execution
+        run: |
+            source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate
+            python iris_classification.py
+      - name: code failed status
+        # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
+        continue-on-error: true  # just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions
+        # when the previous step fails only this step will execute and other steps will not execute as they are not provided with if conditions
+        # when the previous step didnot fail then this if condition step will not execute 
+        # special functions can be used in if failure(),success(),always(),cancelled() 
+        # failure() returns true when any previous step or job fails
+        # success() returns true when none of previous steps failed 
+        # always() returns true always , causes the step to always execute even when cancelled 
+        # cancelled()  return true if the workflow has been cancelled 
+        run : echo "iris_classification.py script execution failed"
+      - name: Get name of the experiment folder name 
+        id: pkl_file_name                        # id for step to use in contexts, should be used after step of creation of the files that is finding
+        run: | 
+          find mlruns/*/*/artifacts/svc_test/*.pkl -type f -execdir echo 'pkl_file={}' >>$GITHUB_OUTPUT ';' #finding a pkl file in the path and storing it in $GITHUB_OUTPUT variable  
+          echo ${{env.ENV_VAR1}}   # can call envrionment variables in two ways
+          echo $ENV_VAR2 # can call envrionment variables in two ways 
+        # accessing environment variables using env context in workflows
+      - name: get files and folder
+        uses: actions/upload-artifact@v3 # action to upload the folder into github
+        with:
+          name: my-artifact # name of the artifact to upload which will be used for download as well
+          path: mlruns  # path of the file or folder to upload
+          # artifacts : https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+        
+  build_docker:
+    needs: python_code_test  # will run only after successful completion of python_code_test job , should used as start of the job 
+    runs-on:  ubuntu-latest  # every job has its own runner and there are isolated from each other and need to copy the code for each runner 
+    steps:                   # jobs will run in parallel by default
+      - name: Get_code
+        uses: actions/checkout@v3
+      - name: get python 3.8
+        uses: actions/setup-python@v4
+        with:
+            python-version: '3.9' # this will set up python 3,.9 as default 
+            #cache: 'pip' # caching pip dependencies
+      - name: cache dependecies
+        id: cache_1
+        uses: actions/cache@v3
+        with:
+            path: venv2
+            key: requirments-${{ hashFiles('**/requirements.txt') }}
+      - name: install dependencies
+        if: steps.cache_1.outputs.cache-hit!='true'
+        run: |
+          pip install -r requirements.txt
+          python --version 
+          echo $ENV_VAR2 
+          echo $env_var2
+       # accessing the env variables
+       # environment variables defined are at job level so it will not appear in second job , will not give error
+      - name: build docker iamge
+        run: echo "build docker image" 
+      - name: download the artifact from github runner
+        uses: actions/download-artifact@v3 # to download the artifact created from github runner , it will unzip the contents in the zip folder and place it in same path where runner is executing 
+        with : 
+          name: my-artifact # name of the artifact created ,and it has to be a sequential job
+      - name : get contents # t osee the contents of the artifacts folder alnong with other files
+        run: ls 
+      - name : get the output of the previous job
+        run: echo "${{needs.python_code_test.outputs.model_pkl_file}}" # needs ,the dependency job which holds all the outputs of the dependency job 
+  
+  deploy:
+    needs: [python_code_test,build_docker] # to provide more than one dependencies
+    if: failure()  # this will return if any previous job fails, to run only if any previous job fails 
+    # can even use and , with other conditions 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: deploy the functions
+        run: |
+          echo "This application is deployed"
+
