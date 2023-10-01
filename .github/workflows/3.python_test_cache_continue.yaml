@@ -115,6 +115,10 @@ jobs:
       - name: echo matrix values
         run: echo ${{matrix.print-value}} , ${{matrix.print-extra-value}}
       - name: calling the reusable workflow
+        run: |
+         pwd
+         cd .github
+         ls
         uses: ./.github/workflows/action.yaml #  to call the reusable.yaml workflow
   build_docker:
     needs: python_code_test  # will run only after successful completion of python_code_test job , should used as start of the job 
