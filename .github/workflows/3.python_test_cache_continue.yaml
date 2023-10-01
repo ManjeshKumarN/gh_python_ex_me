@@ -118,6 +118,7 @@ jobs:
         run: |
          pwd
          ls
+         ls -a
         #uses: /home/runner/work/gh_python_ex_me/gh_python_ex_me/.github/workflows/ #  to call the reusable.yaml workflow
   build_docker:
     needs: python_code_test  # will run only after successful completion of python_code_test job , should used as start of the job 
