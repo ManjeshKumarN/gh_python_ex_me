@@ -165,10 +165,16 @@ jobs:
         run: |
           echo "This application is deployed" 
   reuse-workflow: # to call the complete workflow defined in other workflow file (resuable.yaml) in this workflow 
-    needs: [python_code_test,build_docker]
+    needs: [python_code_test,build_docker] 
+    # steps not required as it is calling another worflow where all are defined 
     uses: ./.github/workflows/reusable.yaml  # it can be for other repository as well
     with:
       artifact-name: my-artifact # name passed here will be used by the reusable.yaml workflow
     secrets: 
       some_secrets: "123"  # can also pass secrets defined usig ${{secrets.value_1}}
-  
+  print-output-from-reuse-workflow: # jobs to consume the outputs from reusable workflow 
+    needs: reuse-workflow 
+    runs-on: ubuntu-latest
+    steps:
+    - name: print the output from resuable workflow
+      run: echo "${{needs.reuse-workflow.outputs.results}}"

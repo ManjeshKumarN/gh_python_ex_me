@@ -7,12 +7,19 @@ on:
         default: artifacts
         required: false # if true it will not run if not passign from calling workflow
         type: string
-    secrets:
+    secrets: # this needs to be passed as string from calling workflow 
       some_secrets:
         required: true
+    outputs:
+      results: # this result will be used by the calling workflow
+        description: the output value of the job
+        value: ${{jobs.print-the-text.outputs.outcomes}} # assigning the output from the "print-the-text" job below to the value which is at workflow level
+        # jobs is only supported for reusable workflows 
 jobs:
     print-the-text:
         runs-on: ubuntu-latest
+        outputs: 
+          outcomes: ${{steps.out-data.outputs.step-results}}  # assigning the output of the step from below to outcomes variable using steps context 
         steps:
          - name : download the artifacts
            uses: actions/download-artifact@v3 # to download the artifact created from github runner , it will unzip the contents in the zip folder and place it in same path where runner is executing 
@@ -23,3 +30,6 @@ jobs:
             ls
             echo ${{secrets.some_secrets}}
             echo "this text is from the called reusbale workflow"
+         - name : set output value of the job
+           id: out-data
+           run: echo "step-results=success" >> $GITHUB_OUTPUT # setting the output of the variable step-results  as "success"
