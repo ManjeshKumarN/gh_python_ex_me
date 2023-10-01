@@ -166,6 +166,6 @@ jobs:
           echo "This application is deployed" 
   reuse-workflow:
     needs: [python_code_test,build_docker,deploy]
-    uses: ./.github/workflows/reusable.yaml
+    uses: ./.github/workflows/reusable.yaml  # it can be for other repository as well
      
   
