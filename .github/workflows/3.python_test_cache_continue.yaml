@@ -167,5 +167,7 @@ jobs:
   reuse-workflow: # to call the complete workflow defined in resuable.yaml in this workflow 
     needs: [python_code_test,build_docker]
     uses: ./.github/workflows/reusable.yaml  # it can be for other repository as well
+    with:
+      artifact-name: my-artifact # name passed here will be used by the reusable.yaml workflow
      
   
