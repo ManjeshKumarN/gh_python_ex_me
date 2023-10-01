@@ -170,5 +170,5 @@ jobs:
     with:
       artifact-name: my-artifact # name passed here will be used by the reusable.yaml workflow
     secrets: 
-      some_secrets: 123  # can also pass secrets defined usig ${{secrets.value_1}}
+      some_secrets: "123"  # can also pass secrets defined usig ${{secrets.value_1}}
   
