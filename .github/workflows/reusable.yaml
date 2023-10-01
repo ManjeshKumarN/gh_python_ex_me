@@ -4,6 +4,8 @@ jobs:
     print-the-text:
         runs-on: ubuntu-latest
         steps:
+         - name: copy code into runner
+           uses: actions/checkout@v3
          - name: print
            run: |
             echo "this text is from the called reusbale workflow"
