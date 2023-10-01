@@ -1,4 +1,4 @@
-name: python-test-continue-matrix
+name: python-test-continue-matrix 
 on: #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- manual trigger
 
 # Using multiple events
@@ -25,7 +25,7 @@ jobs:
     # the default behaviour is if any of the job fails the other jobs may get cancelled or failed , toavoid this "continue-on-error: true" is used at jobs level
     strategy:
         matrix:
-            oper-sys: [ubuntu-latest,windows-latest] # this acts a for loop 
+            oper-sys: [ubuntu-latest,windows-latest] # this acts a for loop can be any name 
             print-value: [2,3,4] # there will be 6 combinations of runners will execute for this job only as the matrix is provides for this job 
             # all the six runners will run parallel
             include: # this helps in specifying the combinations the should be included with matrix 
@@ -33,7 +33,7 @@ jobs:
                 print-value: 5 # 
                 print-extra-value: 30 # can even add extra keys to use  
             exclude: # this helps in excluding the keys specified from the matrix
-              - oper-sys: windows-latest 
+              - oper-sys: windows-latest  # will not execute the windows-latest combinations 
     environment: production 
     outputs:  
       model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 
@@ -114,6 +114,8 @@ jobs:
           # artifacts : https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       - name: echo matrix values
         run: echo ${{matrix.print-value}} , ${{matrix.print-extra-value}}
+      - name: calling the reusable workflow
+        uses: ./.github/workflow/reusable.yaml
   build_docker:
     needs: python_code_test  # will run only after successful completion of python_code_test job , should used as start of the job 
     runs-on:  ubuntu-latest  # every job has its own runner and there are isolated from each other and need to copy the code for each runner 

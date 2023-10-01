@@ -1,0 +1,9 @@
+name: Workflow to use in other workflow
+on: workflow_call
+jobs:
+    print-the-text:
+        runs-on: ubuntu-latest
+        steps:
+         - name: print
+           run: |
+            echo "this text is from the called reusbale workflow"
