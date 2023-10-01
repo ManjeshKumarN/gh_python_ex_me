@@ -164,7 +164,7 @@ jobs:
       - name: deploy the functions
         run: |
           echo "This application is deployed" 
-  reuse-workflow:
+  reuse-workflow: # to call the complete workflow defined in resuable.yaml in this workflow 
     needs: [python_code_test,build_docker]
     uses: ./.github/workflows/reusable.yaml  # it can be for other repository as well
      

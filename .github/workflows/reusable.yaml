@@ -1,8 +1,21 @@
 name: Workflow to use in other workflow
-on: workflow_call
+on: 
+  workflow_call:
+    inputs: # define the imputs 
+      artifact-name:
+        description: name of the artifact or data that has to be passed to this workflow
+        default: artifacts
+        required: true
+        type: string
 jobs:
     print-the-text:
         runs-on: ubuntu-latest
         steps:
+         - name : download the artifacts
+           uses: actions/download-artifact@v3 # to download the artifact created from github runner , it will unzip the contents in the zip folder and place it in same path where runner is executing 
+           with : 
+              name: ${{inputs.artifact-name}} # this provides the input value of the dynamically provided artifact name from the other workflow 
          - name: print
-           run: echo "this text is from the called reusbale workflow"
+           run: |
+            ls
+            echo "this text is from the called reusbale workflow"
