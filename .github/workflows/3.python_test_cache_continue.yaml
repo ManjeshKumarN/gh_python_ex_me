@@ -115,7 +115,8 @@ jobs:
       - name: echo matrix values
         run: echo ${{matrix.print-value}} , ${{matrix.print-extra-value}}
       - name: calling the reusable workflow
-        uses: ./.github/workflows/ #  to call the reusable.yaml workflow
+        run: pwd
+        #uses: /home/runner/work/gh_python_ex_me/gh_python_ex_me/.github/workflows/ #  to call the reusable.yaml workflow
   build_docker:
     needs: python_code_test  # will run only after successful completion of python_code_test job , should used as start of the job 
     runs-on:  ubuntu-latest  # every job has its own runner and there are isolated from each other and need to copy the code for each runner 
