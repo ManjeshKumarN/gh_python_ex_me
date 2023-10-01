@@ -7,6 +7,9 @@ on:
         default: artifacts
         required: false # if true it will not run if not passign from calling workflow
         type: string
+    secrets:
+      some_secrets:
+        required: true
 jobs:
     print-the-text:
         runs-on: ubuntu-latest
