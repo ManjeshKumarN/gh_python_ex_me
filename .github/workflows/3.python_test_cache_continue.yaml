@@ -156,5 +156,5 @@ jobs:
         uses: actions/checkout@v3
       - name: deploy the functions
         run: |
-          echo "This application is deployed"
+          echo "This application is deployed" 
 
