@@ -21,4 +21,5 @@ jobs:
          - name: print
            run: |
             ls
+            echo ${{secrets.some_secrets}}
             echo "this text is from the called reusbale workflow"
