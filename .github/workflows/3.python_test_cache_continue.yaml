@@ -117,7 +117,7 @@ jobs:
       - name: calling the reusable workflow
         run: |
          pwd
-         cd .github
+         cd .github/workflows
          ls
         #uses: ./.github/workflows/action.yaml #  to call the reusable.yaml workflow
   build_docker:
