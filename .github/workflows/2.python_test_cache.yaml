@@ -21,7 +21,7 @@ env:
   env_var3: 123
 jobs:
   python_code_test:
-    #continue-on-error: true
+    continue-on-error: true 
     environment: production 
     outputs:  
       model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 

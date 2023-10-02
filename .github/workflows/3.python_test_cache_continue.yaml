@@ -22,6 +22,7 @@ env:
 jobs:
   python_code_test:
     continue-on-error: true # this will ensure that even if any of the combination fails all the six jobs ( in this example) will run 
+    # continue-on-error: true can be used with or withour matrix 
     # the default behaviour is if any of the job fails the other jobs may get cancelled or failed , toavoid this "continue-on-error: true" is used at jobs level
     strategy:
         matrix:

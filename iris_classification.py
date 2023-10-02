@@ -36,7 +36,7 @@ X_train_sd=pd.DataFrame(stdz.transform(X_train),columns=X_train.columns)
 X_test_sd=pd.DataFrame(stdz.transform(X_test),columns=X_test.columns)
 dataset: PandasDataset = mlflow.data.from_pandas(X_train_sd)
 # Modelling
-mlflow.set_xperiment("mlflow-experiment-python-test")
+mlflow.set_experiment("mlflow-experiment-python-test")
 with mlflow.start_run():
     svc_=SVC(random_state=99,probability=True,decision_function_shape='ovr')
     kernel = ['linear', 'poly', 'rbf']

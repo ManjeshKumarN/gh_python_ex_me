@@ -1,6 +1,6 @@
 name: Workflow to use in other workflow
 on: 
-  workflow_call:
+  workflow_call: # to trigger on called by other workflow
     inputs: # define the imputs 
       artifact-name:
         description: name of the artifact or data that has to be passed to this workflow
