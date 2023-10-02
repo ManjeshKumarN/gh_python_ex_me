@@ -1,4 +1,4 @@
-name: python-test-workflow-dispatch
+name: python-test-workflow-dispatch-container
 on: workflow_dispatch #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- manual trigger
 
 # Using multiple events
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production 
     container:
-      image: ubuntu-latest
+      image: ubuntu:latest
     outputs:  
       model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 
       # contexts : https://docs.github.com/en/actions/learn-github-actions/contexts
