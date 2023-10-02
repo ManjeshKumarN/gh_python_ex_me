@@ -36,6 +36,9 @@ jobs:
       
     
     steps:
+      - name: install pip and python
+        run: |
+         apt-get update && apt install -y python3 python3-pip
       - name: Get_code 
         uses: actions/checkout@v3 
       - name: get python 3.8
