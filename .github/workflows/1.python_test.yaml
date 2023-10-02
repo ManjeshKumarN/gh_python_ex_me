@@ -69,7 +69,7 @@ jobs:
           pip list
           ls
           pwd
-          python iris_classification.py
+          python3 iris_classification.py
       - name: code failed status
         # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
         if: failure() && steps.code_execution.outcome== 'failure' # just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions
