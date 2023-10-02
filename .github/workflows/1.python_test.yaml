@@ -69,6 +69,8 @@ jobs:
           pip list
           ls
           pwd
+          pip install virtualenv
+          source /__w/gh_python_ex_me/gh_python_ex_me/venv/bin/activate
           python iris_classification.py
       - name: code failed status
         # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
