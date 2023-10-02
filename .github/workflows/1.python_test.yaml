@@ -23,8 +23,8 @@ jobs:
   python_code_test:
     runs-on: ubuntu-latest
     environment: production 
-    container:
-      image: ubuntu:latest
+    # container: # provding the container image will ensure that all the steps are run inside container hosted on github runner
+    #   image: ubuntu:latest # along with image can also provide the env varibales need to pass to image 
     outputs:  
       model_pkl_file: ${{ steps.pkl_file_name.outputs.pkl_file }} # step context information , which get the step output using the step id mentioned 
       # contexts : https://docs.github.com/en/actions/learn-github-actions/contexts
@@ -36,10 +36,9 @@ jobs:
       
     
     steps:
-      - name: install pip and python
-        run: |
-         apt-get update && apt install -y python3 python3-pip
-         apt install -y python3-sklearn 
+      # - name: install pip and python
+      #   run: |
+      #    apt-get update && apt install -y python3 python3-pip 
       - name: Get_code 
         uses: actions/checkout@v3 
       - name: get python 3.8
@@ -61,8 +60,8 @@ jobs:
           key: requirments-${{ hashFiles('**/requirements.txt') }}  # this creats a unique key for cache 
       - name: install dependencies
         run: |
-          pip3 install -r requirements.txt
-          python3 --version
+          pip install -r requirements.txt
+          python --version
           echo "this is env var ${{vars.ENV_VAR3}}"
       - name: run the code 
         id: code_execution
@@ -70,7 +69,7 @@ jobs:
           pip list
           ls
           pwd
-          python3 iris_classification.py
+          python iris_classification.py
       - name: code failed status
         # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
         if: failure() && steps.code_execution.outcome== 'failure' # just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions
