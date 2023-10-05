@@ -1,4 +1,4 @@
-name: python-test
+name: python-test-composite-action
 on: #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- manual trigger
 
 # Using multiple events
@@ -53,22 +53,23 @@ jobs:
         with:
             path: venv
             key: venv-${{ hashFiles('**/test.ipynb') }}
-      - name: cache dependecies # cache has to be used before the step which needs to be cached 
-        id: cache_
-        uses: actions/cache@v3 # when once the cache is stored it will reused
-        with:
-          path: venv2
-          key: requirments-${{ hashFiles('**/requirements.txt') }}  # this creats a unique key for cache 
-      - name: install dependencies
-        if: steps.cache_.outputs.cache-hit !='true'       # this will install dependecies when the cache is not saved    #cache-hit is a output of the cache functionality , cache-hit=='true' means cache is successful else not successful
-        # steps context will get the string output
-        run: |
-          pip install virtualenv
-          virtualenv venv2
-          source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate 
-          pip install -r requirements.txt
-          python --version
-          echo "this is env var ${{vars.ENV_VAR3}}"
+      - name: cache and install dependecies using composite action defined # cache has to be used before the step which needs to be cached 
+        uses: ./.github/Composite_/cache_deps # always provide the path from root ./ # no  need to provide the action.yaml file it will look for that by default   
+      #   id: cache_
+      #   uses: actions/cache@v3 # when once the cache is stored it will reused
+      #   with:
+      #     path: venv2
+      #     key: requirments-${{ hashFiles('**/requirements.txt') }}  # this creats a unique key for cache 
+      # - name: install dependencies
+      #   if: steps.cache_.outputs.cache-hit !='true'       # this will install dependecies when the cache is not saved    #cache-hit is a output of the cache functionality , cache-hit=='true' means cache is successful else not successful
+      #   # steps context will get the string output
+      #   run: |
+      #     pip install virtualenv
+      #     virtualenv venv2
+      #     source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate 
+      #     pip install -r requirements.txt
+      #     python --version
+      #     echo "this is env var ${{vars.ENV_VAR3}}"
       - name: run the code 
         id: code_execution
         run: |

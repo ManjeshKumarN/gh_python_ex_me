@@ -2,9 +2,9 @@ name: Workflow to use in other workflow
 on: 
   workflow_call: # to trigger on called by other workflow
     inputs: # define the imputs 
-      artifact-name:
+      artifact-name: # name of the artifact can be any name 
         description: name of the artifact or data that has to be passed to this workflow
-        default: artifacts
+        default: artifacts # default value for artifact-name 
         required: false # if true it will not run if not passign from calling workflow
         type: string
     secrets: # this needs to be passed as string from calling workflow 
