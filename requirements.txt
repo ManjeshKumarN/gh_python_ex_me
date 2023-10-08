@@ -1,6 +1,6 @@
 scikit-learn
 pandas
 mlflow
-numpy
 matplotlib
 scipy
+

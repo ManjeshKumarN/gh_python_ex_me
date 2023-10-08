@@ -1,8 +1,8 @@
 name: testing_venv_install
-on:
-   push:
-    branches:
-     - main
+on: [workflow_dispatch]
+  #  push:
+  #   branches:
+  #    - main
 jobs:
   test:
     runs-on: ubuntu-latest
