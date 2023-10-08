@@ -1,10 +1,17 @@
 name: Cache dependencies and install dependencies # this is file is mandatory  
 description: Caches the dependencies and install if not 
+inputs:
+    caching_variable: 
+        description: should be cached or not varibale passed 
+        required: false
+        default: 'true'
+    #input_variable_2 can also define more than one variable 
 runs: # runs-on is not required 
     using: composite  
     steps:
         - name: cache dependecies # cache has to be used before the step which needs to be cached 
           id: cache_
+          if: ${{inputs.caching_variable}}=='true'
           uses: actions/cache@v3 # when once the cache is stored it will reused
           with:
             path: venv2

@@ -55,7 +55,9 @@ jobs:
             key: venv-${{ hashFiles('**/test.ipynb') }}
       - name: cache and install dependecies using composite action defined # cache has to be used before the step which needs to be cached 
         uses: ./.github/Composite_/cache_deps # always provide the path from root ./ # no  need to provide the action.yaml file it will look for that by default   
-      #   id: cache_
+        with: 
+            caching_variable: 'true'
+        #   id: cache_
       #   uses: actions/cache@v3 # when once the cache is stored it will reused
       #   with:
       #     path: venv2
@@ -131,7 +133,7 @@ jobs:
       - name: download the artifact from github runner
         uses: actions/download-artifact@v3 # to download the artifact created from github runner , it will unzip the contents in the zip folder and place it in same path where runner is executing 
         with : 
-          name: my-artifact # name of the artifact created ,and it has to be a sequential job
+          name: my-artifact # name of the artifact created ,and it has to be a sequential job, can also provide the path where it has to be downloaded
       - name : get contents # t osee the contents of the artifacts folder alnong with other files
         run: ls 
       - name : get the output of the previous job
