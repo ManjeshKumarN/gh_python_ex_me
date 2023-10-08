@@ -19,7 +19,7 @@ runs: # runs-on is not required
             files: "venv2/*"
         - name: cache dependecies # cache has to be used before the step which needs to be cached 
           id: cache_
-          if: ${{inputs.caching_variable}}=='true' &&  ${{steps.check_files.outputs.files_exists}} == 'true'
+          if: inputs.caching_variable=='true' &&  steps.check_files.outputs.files_exists == 'true'
           uses: actions/cache@v3 # when once the cache is stored it will reused
           with:
             path: venv2
@@ -34,6 +34,6 @@ runs: # runs-on is not required
             source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate 
             pip install -r requirements.txt
             python --version
-            echo "cache-step-output=successful" >> $GITHUB_OUTPUT" 
+            echo "cache-step-output=successful" >> $GITHUB_OUTPUT
           shell: bash # should be used when using run
             
