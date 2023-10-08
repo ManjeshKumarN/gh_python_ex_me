@@ -7,7 +7,7 @@ inputs:
 outputs:
     caching_output:
         description: the variable gives the output value
-        value: ${{steps.cache_.outputs.cache-step-output}}
+        value: ${{steps.caching.outputs.cache-step-output}}
     #input_variable_2 can also define more than one variable 
 runs: # runs-on is not required 
     using: composite  
@@ -19,8 +19,9 @@ runs: # runs-on is not required
           with:
             path: venv2
             key: requirments-${{ hashFiles('**/requirements.txt') }}  # this creats a unique key for cache 
-          run: echo "cache-step-output=successful" >> $GITHUB_OUTPUT"
+          
         - name: install dependencies
+          id: caching
           if: steps.cache_.outputs.cache-hit != 'true'       # this will install dependecies when the cache is not pulled (i.e not cached )  #cache-hit is a output of the cache functionality , cache-hit=='true' means cache is successful else not successful
             # steps context will get the string output
           run: |
@@ -29,6 +30,6 @@ runs: # runs-on is not required
             source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate 
             pip install -r requirements.txt
             python --version
-            
+            run: echo "cache-step-output=successful" >> $GITHUB_OUTPUT"
           shell: bash # should be used when using run
             
