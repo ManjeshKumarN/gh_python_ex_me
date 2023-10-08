@@ -54,6 +54,7 @@ jobs:
             path: venv
             key: venv-${{ hashFiles('**/test.ipynb') }}
       - name: cache and install dependecies using composite action defined # cache has to be used before the step which needs to be cached 
+        id: cache_dependency
         uses: ./.github/Composite_/cache_deps # always provide the path from root ./ # no  need to provide the action.yaml file it will look for that by default   
         with: 
             caching_variable: 'true' # thsi input is defined in action file which has to be passed firm here 
@@ -77,6 +78,7 @@ jobs:
         run: |
             source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate
             python iris_classification.py
+            echo "Cache used : ${{steps.cache_dependency.outputs.caching_output}}"
       - name: code failed status
         # steps.code_execution.outcome== 'failure' - this ensures that the previous function is failed , as failure() retunrs true when any function is failed  
         if: failure() && steps.code_execution.outcome== 'failure' # just by  adding steps.code_execution.outcome=='failure" it will not work so need to add special functions
