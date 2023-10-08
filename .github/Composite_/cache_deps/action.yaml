@@ -12,14 +12,18 @@ outputs:
 runs: # runs-on is not required 
     using: composite  
     steps:
+        - name: "Check file existence"
+          id: check_files
+          uses: andstor/file-existence-action@v2
+          with:
+            files: "venv2/*"
         - name: cache dependecies # cache has to be used before the step which needs to be cached 
           id: cache_
-          if: ${{inputs.caching_variable}}=='true' 
+          if: ${{inputs.caching_variable}}=='true' &&  ${{steps.check_files.outputs.files_exists}} == 'true'
           uses: actions/cache@v3 # when once the cache is stored it will reused
           with:
             path: venv2
             key: requirments-${{ hashFiles('**/requirements.txt') }}  # this creats a unique key for cache 
-          
         - name: install dependencies
           id: caching
           if: steps.cache_.outputs.cache-hit != 'true'       # this will install dependecies when the cache is not pulled (i.e not cached )  #cache-hit is a output of the cache functionality , cache-hit=='true' means cache is successful else not successful
@@ -30,6 +34,6 @@ runs: # runs-on is not required
             source /home/runner/work/gh_python_ex_me/gh_python_ex_me/venv2/bin/activate 
             pip install -r requirements.txt
             python --version
-            run: echo "cache-step-output=successful" >> $GITHUB_OUTPUT"
+            echo "cache-step-output=successful" >> $GITHUB_OUTPUT" 
           shell: bash # should be used when using run
             
