@@ -10,7 +10,7 @@ runs: # runs-on is not required
     steps:
         - name: cache dependecies # cache has to be used before the step which needs to be cached 
           id: cache_
-          if: ${{inputs.caching_variable}}=='true'
+          if: ${{inputs.caching_variable}}=='true' 
           uses: actions/cache@v3 # when once the cache is stored it will reused
           with:
             path: venv
