@@ -6,15 +6,15 @@ on: #[push,workflow_dispatch] # added multiple triggers , workflow_dispatch -- m
 # If multiple triggering events for your workflow occur at the same time, multiple workflow runs will be triggered.
   pull_request: 
     types: closed
-  # push:
-  #   branches:
-  #     - main  
-  #     - 'mona/octocat'
-  #     - 'releases/**'
-  #         # Sequence of patterns matched against refs/tags
-    # tags:        
-    #     - v2
-    #     - v1.*
+  push:
+    branches:
+      - main  
+      - 'mona/octocat'
+      - 'releases/**'
+          # Sequence of patterns matched against refs/tags
+    tags:        
+        - v2
+        - v1.*
 env:
   env_var1: we # environment varibales can be at workflow level 
   env_var2: jhg # can be of any name 

@@ -13,10 +13,10 @@ runs: # runs-on is not required
           if: ${{inputs.caching_variable}}=='true' 
           uses: actions/cache@v3 # when once the cache is stored it will reused
           with:
-            path: venv
+            path: venv2
             key: requirments-${{ hashFiles('**/requirements.txt') }}  # this creats a unique key for cache 
         - name: install dependencies
-          if: steps.cache_.outputs.cache-hit != 'true'       # this will install dependecies when the cache is not saved    #cache-hit is a output of the cache functionality , cache-hit=='true' means cache is successful else not successful
+          if: steps.cache_.outputs.cache-hit != 'true'       # this will install dependecies when the cache is not pulled (i.e not cached )  #cache-hit is a output of the cache functionality , cache-hit=='true' means cache is successful else not successful
             # steps context will get the string output
           run: |
             pip install virtualenv

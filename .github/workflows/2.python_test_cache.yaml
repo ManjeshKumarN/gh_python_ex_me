@@ -113,12 +113,12 @@ jobs:
         with:
             python-version: '3.9' # this will set up python 3,.9 as default 
             #cache: 'pip' # caching pip dependencies
-      # - name: cache dependecies
-      #   id: cache_1
-      #   uses: actions/cache@v3
-      #   with:
-      #       path: venv2
-      #       key: requirments-${{ hashFiles('**/requirements.txt') }}
+      - name: cache dependecies
+        id: cache_1
+        uses: actions/cache@v3
+        with:
+            path: venv2
+            key: requirments-${{ hashFiles('**/requirements.txt') }}
       - name: install dependencies
         if: steps.cache_1.outputs.cache-hit!='true'
         run: |
